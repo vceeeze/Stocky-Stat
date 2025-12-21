@@ -5,7 +5,7 @@ import NavItem from './NavItems'
 import logo from "../public/assets/icons/logo.svg"
 import UserDropdown from './UserDropdown'
 
-const Header = () => {
+const Header = ({user}: {user: User }) => {
   return (
     <header className='sticky top-0 header'>
         <div className='container header-wrapper'>
@@ -15,7 +15,7 @@ const Header = () => {
             <nav className='hidden sm:block'>
                <NavItem />
             </nav>
-                <UserDropdown />
+                <UserDropdown user={user} />
         </div>
     </header>
   )

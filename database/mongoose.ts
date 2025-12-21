@@ -32,5 +32,6 @@ export const connectToDatabase = async () => {
 
 
     console.log(`MongoDB connected ${process.env.NODE_ENV} - ${MONGODB_URI}`  );
-
+        // console.log(`MongoDB connected in ${process.env.NODE_ENV || 'development'} environment`);
+    return cached.conn;
 }

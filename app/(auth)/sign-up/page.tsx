@@ -4,12 +4,16 @@ import FooterLink from '@/components/forms/FooterLink';
 import InputField from '@/components/forms/inputField';
 import SelectField from '@/components/forms/SelectField';
 import { Button } from '@/components/ui/button';
+import { signUpWithEmail } from '@/lib/actions/auth.actions';
 import { INVESTMENT_GOALS, RISK_TOLERANCE_OPTIONS, PREFERRED_INDUSTRIES } from '@/lib/constants';
+import { signInEmail } from 'better-auth/api';
 import { error } from 'console';
+import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 const SignUp = () => {
-
+    const router = useRouter();
     const {register, handleSubmit, control, formState: {errors, isSubmitting}} = useForm<SignUpFormData>({
         defaultValues: {
         
@@ -23,16 +27,22 @@ const SignUp = () => {
         },
         mode: 'onBlur'
     }, );
-    async function onSubmit(data: SignUpFormData) {
-        try {
-            
-        } catch (e) {
-            console.error(e);
-        }
+
+    const onSubmit = async (data: SignUpFormData) => {
+      
+            try {
+                  const result = await signUpWithEmail(data);
+                   if(result.success)  router.push('/');
+            } catch (e) {
+                console.error(e);
+                toast.error('Sign up failed. Please try again.', {
+                    description: e instanceof Error ? e.message : 'Failed to create account.'
+                });
+            }
     }
 
   return (
-    <div className=''>
+    <>
         <h1 className="form-title">Sign Up & Personalize</h1>
 
         <form onSubmit={handleSubmit(onSubmit)} className='space-y-5 '>
@@ -121,7 +131,7 @@ const SignUp = () => {
         />
 
         </form>
-    </div>
+    </>
   )
 }
  
