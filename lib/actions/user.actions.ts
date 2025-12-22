@@ -1,0 +1,26 @@
+'use server'
+
+import { connectToDatabase } from "@/database/mongoose";
+
+export const getAllUsersForNewsEmail = async() => {
+    try {
+            const mongoose = await connectToDatabase();
+
+            const db = mongoose.connection.db;
+            if(!db) throw new Error('Database connection error');
+
+            const user = await db.collection('user').find(
+                {email: {$exists: true, $ne: null}},
+                {projection: {id: 1, email: 1, name: 1, country: 1}}
+            ).toArray();
+
+            return user.filter((user) => user.email && user.name).map((user) => ({
+                id: user.id || user._id.toString() || '',
+                email: user.email,
+                name: user.name
+            }))
+    } catch (e) {
+        console.log('Error fetching users from news email', e)
+        return []
+    }
+}
